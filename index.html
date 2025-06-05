@@ -12,408 +12,469 @@
 </html><!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8">
   <title>PK MUSIC DOWNLOADER</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Download and play music from YouTube, Spotify, Vidmate and more. Follow Pkdriller on GitHub.">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --main-green: #33ff33;
+      --dark-bg: #101820;
+      --glow: 0 0 8px #33ff33, 0 0 2px #33ff33;
+      --holo: linear-gradient(90deg, #0f0 0%, #05f2 100%);
+    }
     body {
+      background: radial-gradient(ellipse at top, #1a2b2d 0%, #101820 100%);
+      color: var(--main-green);
+      font-family: 'Share Tech Mono', monospace;
       margin: 0;
       padding: 0;
-      background: radial-gradient(ellipse at top left,#07110e 60%,#052a1b 100%);
-      color: #50ff99;
-      font-family: 'Share Tech Mono', monospace;
       min-height: 100vh;
       overflow-x: hidden;
     }
-    .holo-anim {
-      pointer-events: none;
-      z-index: 0;
-      position: fixed;
-      width: 100vw; height: 100vh; top: 0; left: 0;
-      background: repeating-linear-gradient(120deg, #50ff99 0 2px, transparent 2px 40px);
-      opacity: 0.03;
-      mix-blend-mode: lighten;
+    .holo-box {
+      background: rgba(30,50,40,0.18);
+      border: 1.5px solid #33ff33cc;
+      box-shadow: 0 0 20px #33ff3350, 0 0 2px #33ff33;
+      border-radius: 18px;
+      padding: 2rem 1.5rem;
+      margin: 2rem auto;
+      max-width: 620px;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
     }
-    header {
+    .holo-header {
+      font-size: 2.2rem;
+      font-weight: bold;
+      letter-spacing: 0.1em;
       text-align: center;
-      margin-top: 40px;
-      margin-bottom: 18px;
-    }
-    .main-title {
-      font-size: 2.6rem;
-      letter-spacing: 9px;
-      text-shadow: 0 0 8px #00ffae,0 0 30px #00ffae80;
-      background: linear-gradient(90deg,#39ff14,#00fff0 60%,#39ff14);
+      margin-bottom: 0.4rem;
+      text-shadow: var(--glow);
+      background: var(--holo);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-weight: bold;
-      border-bottom: 2px solid #50ff99;
-      padding-bottom: 8px;
-      user-select: none;
     }
-    .search-section {
-      display: flex; justify-content: center; margin: 40px 0 18px 0; gap: 12px; z-index: 2; position: relative;
+    .glow {
+      text-shadow: var(--glow);
     }
-    .search-section input {
-      width: 340px; max-width: 70vw;
-      background: #03190b;
-      border: 2px solid #50ff99;
-      color: #50ff99;
-      font-size: 1.1rem;
-      padding: 11px 16px;
-      border-radius: 8px;
-      outline: none;
-      transition: border 0.2s;
-      box-shadow: 0 0 6px #00ffae50;
-    }
-    .search-section button {
-      background: linear-gradient(90deg,#50ff99,#00ffae 70%);
-      color: #0c2e1a;
-      border: none;
-      font-size: 1.08rem;
-      padding: 11px 22px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: bold;
-      box-shadow: 0 0 8px #39ff1490;
-      letter-spacing: 1px;
-      transition: background 0.2s;
-    }
-    .search-section button:hover {
-      background: linear-gradient(90deg, #00ffae, #50ff99 70%);
-    }
-    .results {
-      max-width: 740px;
-      margin: 0 auto;
-      background: rgba(11,34,21,0.83);
-      border-radius: 15px;
-      padding: 22px 14px 18px 14px;
-      box-shadow: 0 0 28px #50ff9922;
-      min-height: 110px;
-      z-index: 1;
-      position: relative;
-    }
-    .music-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .music-list li {
+    .search-bar {
       display: flex;
       align-items: center;
-      gap: 19px;
-      padding: 12px 0 10px 0;
-      border-bottom: 1px solid #1a5b3d66;
+      background: rgba(16, 32, 34, 0.72);
+      border: 1px solid #33ff33cc;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px #33ff3325;
     }
-    .music-list li:last-child { border-bottom: none; }
-    .thumb {
-      width: 67px; height: 67px;
-      border-radius: 7px;
-      object-fit: cover;
-      border: 2px solid #50ff99;
-      background: #0b2215;
-      box-shadow: 0 0 10px #50ff9977;
+    .search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--main-green);
+      font-size: 1.1rem;
+      outline: none;
+      padding: 0.3rem 0.6rem;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.01em;
+    }
+    .search-bar button {
+      background: var(--holo);
+      color: #101820;
+      border: none;
+      padding: 0.4rem 1.1rem;
+      border-radius: 8px;
+      font-size: 1.04rem;
+      font-family: inherit;
       cursor: pointer;
-      transition: transform 0.15s;
-    }
-    .thumb:active { transform: scale(0.97); }
-    .info { flex: 1; min-width: 0; }
-    .music-title {
-      font-size: 1.13rem;
       font-weight: bold;
-      color: #50ff99;
-      margin-bottom: 5px;
-      text-shadow: 0 0 4px #50ff99bb;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      user-select: text;
+      transition: background 0.2s;
+      box-shadow: 0 0 7px #33ff3322;
+      margin-left: 0.6rem;
+    }
+    .search-bar button:hover {
+      background: linear-gradient(90deg, #33ff33 0%, #66ff66 100%);
+      color: #101820;
+    }
+    .source-badges {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(0,255,120,0.18);
+      border: 1px solid #0f0;
+      border-radius: 11px;
+      color: #0f0;
+      font-size: 0.82rem;
+      padding: 0.14em 0.7em;
+      margin: 0 0.14em 0.3em 0;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      box-shadow: 0 0 5px #33ff3336;
+    }
+    .music-list {
+      margin-top: 1.2rem;
+    }
+    .music-item {
+      display: flex;
+      align-items: center;
+      background: rgba(16, 32, 34, 0.87);
+      border: 1px solid #33ff3340;
+      border-radius: 8px;
+      margin-bottom: 1.2rem;
+      padding: 0.8rem;
+      box-shadow: 0 0 12px #33ff3320;
+      transition: background 0.22s;
+      position: relative;
+    }
+    .music-item:hover {
+      background: rgba(16,32,34,1);
+      border-color: #33ff33cc;
+      box-shadow: 0 0 18px #33ff332c;
+    }
+    .music-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 1.2rem;
+      box-shadow: 0 0 9px #33ff3325;
+      border: 1.5px solid #33ff33;
+      cursor: pointer;
+      transition: box-shadow 0.22s;
+    }
+    .music-thumb:hover {
+      box-shadow: 0 0 20px #33ff33, 0 0 3px #33ff33;
+    }
+    .music-info {
+      flex: 1;
+      color: #b5ffbd;
+    }
+    .music-title {
+      font-size: 1.11rem;
+      font-weight: bold;
+      color: var(--main-green);
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.01em;
     }
     .music-meta {
-      font-size: 0.96rem;
-      color: #00ffae;
-      opacity: 0.76;
-      margin-bottom: 2px;
+      font-size: 0.92rem;
+      color: #44ff44;
     }
-    .source-badge {
-      font-size: 0.89rem;
-      color: #03190b;
-      background: #00ffae;
-      padding: 2px 8px;
+    .music-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+      margin-left: 1rem;
+    }
+    .music-actions button {
+      background: var(--holo);
+      color: #101820;
+      border: none;
       border-radius: 6px;
-      font-weight: 700;
-      margin-left: 7px;
-      box-shadow: 0 0 5px #00ffae90;
-      vertical-align: middle;
-      user-select: none;
-    }
-    .play-btn {
-      background: none;
-      border: 2px solid #50ff99;
-      color: #50ff99;
-      border-radius: 50%;
-      width: 44px; height: 44px;
-      font-size: 1.5rem;
-      display: flex; align-items: center; justify-content: center;
+      padding: 0.2em 0.8em;
+      font-family: inherit;
+      font-size: 0.95em;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      margin-left: 9px;
-    }
-    .play-btn.playing,.play-btn:active { background: #00ffaeaa; color: #03190b; }
-    .audio-bar {
-      width: 100%;
-      background: #03190b;
-      border-top: 2px solid #50ff99;
-      border-radius: 0 0 16px 16px;
-      padding: 13px 0 10px 0;
-      display: flex; align-items: center; justify-content: center; gap: 18px;
-      position: fixed; bottom: 0; left: 0; z-index: 99;
-      box-shadow: 0 0 32px #50ff9922;
-      height: 70px;
-      transition: transform 0.32s;
-    }
-    .audio-bar.hidden { transform: translateY(100%); }
-    .audio-title {
-      flex: 1; color: #00ffae; font-size: 1rem; text-align: left;
-      margin-right: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      font-weight: 500; letter-spacing: 1px; user-select: text;
-    }
-    .audio-thumb {
-      width: 52px; height: 52px;
-      border-radius: 7px;
-      object-fit: cover;
-      border: 2px solid #50ff99;
-      background: #0b2215;
-      margin-left: 8px;
-    }
-    .github-follow,
-    .rate-section {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: #03190b;
-      border: 2px solid #50ff99;
-      border-radius: 8px;
-      padding: 8px 18px;
-      margin: 22px 12px 0 0;
-      color: #50ff99;
-      text-decoration: none;
-      font-weight: 600;
       transition: background 0.2s;
-      box-shadow: 0 0 8px #39ff1490;
-      font-size: 1.08rem;
+      margin-bottom: 0.1em;
+      box-shadow: 0 0 4px #33ff3322;
     }
-    .github-follow:hover,.rate-section:hover { background: #00ffae33; color: #39ff14; }
-    .footer {
+    .music-actions button:hover {
+      background: #33ff33;
+      color: #101820;
+    }
+    .audio-player {
+      width: 100%;
+      margin: 1.6em 0 0.4em 0;
+      background: #121b1e;
+      border: 1px solid #33ff3360;
+      border-radius: 8px;
+      padding: 1em 0.6em;
+      box-shadow: 0 0 9px #33ff3320;
+    }
+    .github-follow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.3rem;
+      margin-bottom: 0.3em;
+      gap: 0.5em;
+    }
+    .github-follow a {
+      color: #0f0;
+      font-weight: bold;
+      text-decoration: none;
+      background: #222;
+      border: 1px solid #0f0;
+      border-radius: 6px;
+      padding: 0.18em 0.8em;
+      transition: background 0.19s, box-shadow 0.19s;
+      box-shadow: 0 0 7px #33ff3322;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45em;
+    }
+    .github-follow a:hover {
+      background: #0f0;
+      color: #121b1e;
+      box-shadow: 0 0 14px #33ff33;
+    }
+    .rate-site {
       text-align: center;
-      margin-top: 40px; margin-bottom: 92px;
-      color: #00ffaecc; font-size: 1.1rem; letter-spacing: 2px;
-      text-shadow: 0 0 5px #50ff9950;
+      margin-top: 1.2em;
+      margin-bottom: 1.5em;
+    }
+    .rate-site label {
+      font-size: 1.08em;
+      margin-right: 0.6em;
+    }
+    .stars {
+      display: inline-block;
+      font-size: 1.4em;
+      cursor: pointer;
+      color: #33ff33;
+      filter: drop-shadow(0 0 3px #33ff3370);
+      transition: color 0.14s;
+    }
+    .stars .star {
+      margin-right: 0.02em;
       user-select: none;
     }
-    .hacker-glow { box-shadow: 0 0 14px #00ffae,0 0 42px #39ff14aa; }
+    .stars .star.selected, .stars .star:hover, .stars .star.selected ~ .star {
+      color: #2f6;
+      text-shadow: 0 0 7px #33ff33;
+    }
     @media (max-width: 600px) {
-      .search-section input { width: 120px; font-size: 1rem;}
-      .audio-bar { height: 105px; flex-direction: column;}
-      .audio-bar .audio-title { margin-right: 0;}
-      .audio-bar .audio-thumb { margin-left: 0;}
-      .results { min-width: 0; padding: 12px 0 10px 0;}
+      .holo-box {
+        padding: 1rem 0.4rem;
+      }
+      .music-item {
+        padding: 0.55rem;
+      }
+      .music-thumb {
+        width: 44px; height: 44px;
+        margin-right: 0.7rem;
+      }
+      .music-title {
+        font-size: 1.02rem;
+      }
+    }
+    /* Cybernetics scan lines effect */
+    body::before {
+      content: "";
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(51,255,51,0.02) 0px,
+        rgba(51,255,51,0.04) 2px,
+        transparent 4px,
+        transparent 8px
+      );
+      mix-blend-mode: lighten;
+      opacity: 0.25;
+      animation: scanlines 2.5s linear infinite;
+    }
+    @keyframes scanlines {
+      0% { background-position-y: 0; }
+      100% { background-position-y: 8px; }
     }
   </style>
 </head>
 <body>
-  <div class="holo-anim"></div>
-  <header>
-    <h1 class="main-title hacker-glow">PK MUSIC DOWNLOADER</h1>
-  </header>
-  <div class="search-section">
-    <input id="searchInput" type="text" placeholder="Search music, artist, or paste a link..." autofocus autocomplete="off"/>
-    <button id="searchBtn">Search</button>
-  </div>
-  <div class="results" id="results">
-    <div style="text-align:center;color:#00ffae99;font-size:1.17rem;">
-      <span>🔍 Search for any music to play or download.<br>Sources: YouTube, Spotify, Vidmate, and more.</span>
+  <div class="holo-box">
+    <div class="holo-header">PK MUSIC DOWNLOADER</div>
+    <div style="text-align:center;font-size:1.07em;margin-bottom:1.2em;">
+      <span class="glow">Search &amp; play music from all your favorite platforms!</span>
+    </div>
+    <form class="search-bar" id="searchForm" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Search for any song, artist, or album..." autofocus>
+      <button type="submit">Search</button>
+    </form>
+    <div class="source-badges" id="sourceBadges">
+      <span class="badge">YouTube</span>
+      <span class="badge">Spotify</span>
+      <span class="badge">Vidmate</span>
+      <span class="badge">SoundCloud</span>
+      <span class="badge">Apple Music</span>
+      <span class="badge">And More...</span>
+    </div>
+    <div class="music-list" id="musicList"></div>
+    <div class="audio-player" id="audioPlayer" style="display:none;">
+      <div style="font-size:1.01em;margin-bottom:0.2em;" id="audioTitle"></div>
+      <audio id="player" controls style="width:100%;outline:none;border-radius:6px;"></audio>
+    </div>
+    <div class="github-follow">
+      <a href="https://github.com/Pkdriller" target="_blank" rel="noopener">
+        <svg height="1.2em" viewBox="0 0 16 16" fill="currentColor" width="1.2em"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.2 1.87.86 2.33.66.07-.52.28-.86.51-1.06-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.09 0 0 .67-.22 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.08.16 1.89.08 2.09.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+        Follow me on GitHub
+      </a>
+    </div>
+    <div class="rate-site">
+      <label>Rate this site:</label>
+      <span class="stars" id="rateStars">
+        <span class="star" data-star="1">&#9733;</span>
+        <span class="star" data-star="2">&#9733;</span>
+        <span class="star" data-star="3">&#9733;</span>
+        <span class="star" data-star="4">&#9733;</span>
+        <span class="star" data-star="5">&#9733;</span>
+      </span>
+      <span id="rateMsg" style="margin-left:0.8em;font-size:0.99em;"></span>
+    </div>
+    <div style="text-align:center;color:#33ff33a0;font-size:0.92em;margin-top:2em;">
+      &copy; 2025 PK Music Downloader &mdash; by <a href="https://github.com/Pkdriller" style="color:#0f0;">Pkdriller</a>
     </div>
   </div>
-  <div class="audio-bar hidden" id="audioBar">
-    <img src="" alt="Cover" class="audio-thumb" id="audioThumb">
-    <div class="audio-title" id="audioTitle"></div>
-    <audio id="audioPlayer" controls preload="auto" style="background:#03190b;border-radius:8px;max-width:180px;"></audio>
-    <button class="play-btn" id="audioPlayBtn" title="Pause/Resume">&#9654;</button>
-  </div>
-  <div style="text-align:center;margin-top:32px;">
-    <a href="https://github.com/Pkdriller" class="github-follow" target="_blank">
-      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="24" height="24" style="border-radius:6px;filter:brightness(1.2);border:1px solid #00ffae;margin-right:6px;">
-      Follow me on GitHub
-    </a>
-    <span class="rate-section" id="rateSection">
-      <span style="margin-right:5px;">Rate this website:</span>
-      <span id="stars" style="cursor:pointer;">
-        <span data-star="1">&#9734;</span>
-        <span data-star="2">&#9734;</span>
-        <span data-star="3">&#9734;</span>
-        <span data-star="4">&#9734;</span>
-        <span data-star="5">&#9734;</span>
-      </span>
-    </span>
-  </div>
-  <div class="footer">
-    Cybernetic & Holographic UI • Hacker Green Style<br>
-    Powered by <span style="color:#50ff99;font-weight:700;">PKdriller</span>
-  </div>
-  <script>
-    // Holo animation
-    setInterval(()=>{document.querySelector('.holo-anim').style.backgroundPosition=`${Math.random()*400}px ${Math.random()*400}px`;},2000);
 
-    // Star rating logic
-    const stars = document.querySelectorAll('#stars span');
-    let rated = 0;
-    stars.forEach(star=>{
-      star.addEventListener('mouseover',()=>{
-        const val=+star.getAttribute('data-star');
-        stars.forEach((s,i)=>{s.innerHTML=(i<val)?'★':'☆';});
+  <script>
+    // Dummy music data to simulate fetching from APIs
+    const DUMMY_MUSIC = [
+      {
+        title: "Blinding Lights",
+        artist: "The Weeknd",
+        source: "YouTube",
+        thumb: "https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      {
+        title: "Shape of You",
+        artist: "Ed Sheeran",
+        source: "Spotify",
+        thumb: "https://i.scdn.co/image/ab67616d0000b273b8e3f4d4d9b7b0e9d3a7e2f2",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      },
+      {
+        title: "Levitating",
+        artist: "Dua Lipa",
+        source: "Vidmate",
+        thumb: "https://i.ytimg.com/vi/TUVcZfQe-Kw/hqdefault.jpg",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      },
+      {
+        title: "Despacito",
+        artist: "Luis Fonsi",
+        source: "YouTube",
+        thumb: "https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
+      },
+      {
+        title: "Senorita",
+        artist: "Shawn Mendes & Camila Cabello",
+        source: "Spotify",
+        thumb: "https://i.scdn.co/image/ab67616d0000b2738f6608e8a4c7cdb7e6b5f3a7",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
+      },
+      {
+        title: "On My Way",
+        artist: "Alan Walker",
+        source: "SoundCloud",
+        thumb: "https://i1.sndcdn.com/artworks-000547969355-x7p5kp-t500x500.jpg",
+        audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"
+      }
+    ];
+
+    const musicList = document.getElementById('musicList');
+    const audioPlayerBox = document.getElementById('audioPlayer');
+    const audioTitle = document.getElementById('audioTitle');
+    const player = document.getElementById('player');
+    let currentAudio = null;
+
+    // Live search and render
+    function renderMusicList(query = "") {
+      musicList.innerHTML = "";
+      let filtered = DUMMY_MUSIC.filter(m =>
+        m.title.toLowerCase().includes(query.toLowerCase()) ||
+        m.artist.toLowerCase().includes(query.toLowerCase())
+      );
+      if (!filtered.length) {
+        musicList.innerHTML = `<div style="color:#0f0a;text-align:center;margin-top:2em;font-size:1.1em;">No music found for "<span style="color:#0f0;text-shadow:0 0 5px #0f0">${query}</span>"</div>`;
+        audioPlayerBox.style.display = 'none';
+        return;
+      }
+      filtered.forEach((m, idx) => {
+        const el = document.createElement('div');
+        el.className = 'music-item';
+        el.innerHTML = `
+          <img src="${m.thumb}" class="music-thumb" title="Play preview" data-idx="${idx}">
+          <div class="music-info">
+            <div class="music-title">${m.title}</div>
+            <div class="music-meta">By ${m.artist} &bull; Source: <span class="badge">${m.source}</span></div>
+          </div>
+          <div class="music-actions">
+            <button data-idx="${idx}" class="play-btn">Play</button>
+            <button data-idx="${idx}" class="download-btn">Download</button>
+          </div>
+        `;
+        // Thumbnail click to play preview
+        el.querySelector('.music-thumb').addEventListener('click', () => playMusic(m, idx));
+        el.querySelector('.play-btn').addEventListener('click', () => playMusic(m, idx));
+        el.querySelector('.download-btn').addEventListener('click', () => downloadMusic(m));
+        musicList.appendChild(el);
       });
-      star.addEventListener('mouseout',()=>{
-        stars.forEach((s,i)=>{s.innerHTML=(i<rated)?'★':'☆';});
-      });
-      star.addEventListener('click',()=>{
-        rated=+star.getAttribute('data-star');
-        stars.forEach((s,i)=>{s.innerHTML=(i<rated)?'★':'☆';});
-        document.getElementById('rateSection').innerHTML=`<span style="color:#00ffae;">Thank you for rating: ${"★".repeat(rated)}${"☆".repeat(5-rated)}</span>`;
-      });
+    }
+
+    function playMusic(music, idx) {
+      audioTitle.innerHTML = `<b>${music.title}</b> — <span style="color:#0f0">${music.artist}</span> <span class="badge">${music.source}</span>`;
+      player.src = music.audio;
+      player.play();
+      audioPlayerBox.style.display = 'block';
+      // Scroll to player if on mobile
+      if (window.innerWidth < 700) {
+        audioPlayerBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    function downloadMusic(music) {
+      const link = document.createElement('a');
+      link.href = music.audio;
+      link.download = `${music.title.replace(/\s+/g,"_")}.mp3`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Live search UI
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      renderMusicList(this.value.trim());
+    });
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      renderMusicList(document.getElementById('searchInput').value.trim());
     });
 
-    // Music search logic (demo/mock, replace fetchMusic with real API)
-    const searchInput=document.getElementById('searchInput');
-    const searchBtn=document.getElementById('searchBtn');
-    const resultsDiv=document.getElementById('results');
-    let lastQuery="";
-    let playingAudio=null;
-
-    function escapeHTML(text) {
-      return (text||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);
-    }
-
-    // For demo, mock results. Integrate real API as needed.
-    async function fetchMusic(query) {
-      // Place your actual fetching logic here. Example uses a static array.
-      resultsDiv.innerHTML=`<div style="color:#00ffaecc;text-align:center;margin:22px 0;font-size:1.23rem;"><span class="hacker-glow">Searching for "${escapeHTML(query)}"...</span></div>`;
-      // Simulate delay
-      await new Promise(r=>setTimeout(r,600));
-      // Example results (replace with actual API results)
-      let demoResults=[
-        {
-          title:"Astronaut In The Ocean",
-          artist:"Masked Wolf",
-          duration:"2:12",
-          source:"YouTube",
-          thumb:"https://i.ytimg.com/vi/MEg-oqI9qmw/hqdefault.jpg",
-          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-        },
-        {
-          title:"Industry Baby",
-          artist:"Lil Nas X & Jack Harlow",
-          duration:"3:32",
-          source:"Spotify",
-          thumb:"https://i.scdn.co/image/ab67616d0000b273c5fae7f7c5d2d1ea97e5e7c7",
-          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-        },
-        {
-          title:"On My Way",
-          artist:"Alan Walker",
-          duration:"3:13",
-          source:"Vidmate",
-          thumb:"https://i.ytimg.com/vi/dhYOPzcsbGM/hqdefault.jpg",
-          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-        }
-      ];
-      renderResults(demoResults);
-    }
-
-    function renderResults(results) {
-      if(!Array.isArray(results)||!results.length) {
-        resultsDiv.innerHTML=`<div style="color:#ff4e5c;text-align:center;padding:32px 0;font-size:1.2rem;"><b>No music found!</b></div>`;
-        return;
+    // Star rating system
+    const rateStars = document.getElementById('rateStars');
+    const rateMsg = document.getElementById('rateMsg');
+    let rated = false;
+    rateStars.addEventListener('click', function(e) {
+      if (e.target.classList.contains('star')) {
+        const n = +e.target.dataset.star;
+        if (!n) return;
+        Array.from(rateStars.children).forEach((star, idx) => {
+          star.classList.toggle('selected', idx < n);
+        });
+        rateMsg.textContent = `Thanks for rating ${n} star${n>1?'s':''}!`;
+        rated = true;
       }
-      const html=['<ul class="music-list">'];
-      results.forEach(item=>{
-        let srcBadge="";
-        const src=(item.source||"").toUpperCase();
-        if(src.includes("YOUTUBE")) srcBadge='<span class="source-badge">YouTube</span>';
-        else if(src.includes("SPOTIFY")) srcBadge='<span class="source-badge">Spotify</span>';
-        else if(src.includes("VIDMATE")) srcBadge='<span class="source-badge">Vidmate</span>';
-        else if(src) srcBadge=`<span class="source-badge">${escapeHTML(src)}</span>`;
-        let thumb=item.thumb||"https://cdn-icons-png.flaticon.com/512/727/727245.png";
-        let title=escapeHTML(item.title||"Untitled");
-        let artist=escapeHTML(item.artist||"");
-        let duration=item.duration||"";
-        let audioUrl=item.audio||item.url||"";
-        html.push(`
-        <li>
-          <img src="${thumb}" class="thumb" alt="Cover" title="Preview" onclick="playThumbPreview('${thumb}')">
-          <div class="info">
-            <div class="music-title">${title} ${srcBadge}</div>
-            <div class="music-meta">${artist} ${duration?`• ${duration}`:""}</div>
-          </div>
-          <button class="play-btn" onclick="playMusic('${escapeHTML(title)}','${audioUrl}','${thumb}', this)" title="Play">&#9654;</button>
-          <a href="${audioUrl}" download target="_blank" style="color:#00ffae;margin-left:7px;text-decoration:underline;font-size:1rem;" title="Download">⬇</a>
-        </li>`);
-      });
-      html.push("</ul>");
-      resultsDiv.innerHTML=html.join('');
-    }
+    });
 
-    // Expose playMusic and playThumbPreview globally
-    window.playMusic=(title,audioUrl,thumb,btn)=>{
-      const bar=document.getElementById('audioBar');
-      const player=document.getElementById('audioPlayer');
-      const titleDiv=document.getElementById('audioTitle');
-      const thumbImg=document.getElementById('audioThumb');
-      if(playingAudio && playingAudio!==player) playingAudio.pause();
-      if(player.src===audioUrl) {
-        if(player.paused) { player.play(); btn.classList.add('playing'); }
-        else { player.pause(); btn.classList.remove('playing'); }
-        return;
-      }
-      playingAudio=player;
-      player.src=audioUrl;
-      player.play();
-      titleDiv.textContent=title;
-      thumbImg.src=thumb;
-      bar.classList.remove('hidden');
-      document.querySelectorAll('.play-btn').forEach(b=>b.classList.remove('playing'));
-      btn.classList.add('playing');
-      player.onpause=()=>{btn.classList.remove('playing');};
-      player.onplay=()=>{btn.classList.add('playing');};
-    };
-    window.playThumbPreview=(thumb)=>{
-      // Play a "beep" and flash the thumb for confirmation
-      const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-      const o=audioCtx.createOscillator();
-      o.type='triangle'; o.frequency.value=440; o.connect(audioCtx.destination); o.start();
-      setTimeout(()=>o.stop(), 180);
-      // Animate the thumb image
-      const imgs=[...document.querySelectorAll('.thumb')].filter(img=>img.src===thumb);
-      imgs.forEach(img=>{
-        img.classList.add('hacker-glow');
-        setTimeout(()=>img.classList.remove('hacker-glow'), 400);
-      });
-    };
-    // Hide audio bar on audio end
-    document.getElementById('audioPlayer').addEventListener('ended',()=>{document.getElementById('audioBar').classList.add('hidden');});
-    // Play/pause from bar
-    document.getElementById('audioPlayBtn').onclick=function() {
-      const player=document.getElementById('audioPlayer');
-      if(player.paused) player.play(); else player.pause();
-    };
-    // Search events
-    searchBtn.onclick=()=>{
-      const val=searchInput.value.trim();
-      if(!val||val===lastQuery) return;
-      lastQuery=val;
-      fetchMusic(val);
-    };
-    searchInput.addEventListener('keydown',e=>{if(e.key==="Enter")searchBtn.click();});
+    // Initial render
+    renderMusicList();
+
+    // Cyber effect: flashing input border
+    setInterval(() => {
+      document.getElementById('searchInput').style.boxShadow =
+        (Math.random() > 0.5 ? '0 0 14px #33ff3399' : '0 0 7px #33ff3322');
+    }, 700);
+
   </script>
 </body>
 </html>
