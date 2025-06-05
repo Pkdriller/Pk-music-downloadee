@@ -15,7 +15,7 @@
   <meta charset="UTF-8">
   <title>Cybernetic Holographic Music Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Download & play music in a cybernetic, holographic, hacker-green styled site. Follow Pkdriller on GitHub. Rate us!">
+  <meta name="description" content="Search, play, and download music in a cybernetic, holographic, hacker-green styled website. Follow Pkdriller on GitHub. Rate us!">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -99,7 +99,7 @@
       border: 2px solid var(--holo-accent);
       box-shadow: 0 0 30px #00ffe7, 0 0 7px #39ff14 inset;
       padding: 2rem 2.5rem;
-      max-width: 420px;
+      max-width: 500px;
       width: 100%;
       margin-bottom: 2rem;
       display: flex;
@@ -114,12 +114,46 @@
       text-shadow: var(--cyber-glow);
       text-align: center;
     }
+    .search-bar {
+      display: flex;
+      margin-bottom: 1em;
+      gap: 0.7em;
+    }
+    .search-bar input {
+      background: #0b0f1a;
+      border: 2px solid var(--hacker-green);
+      color: var(--hacker-green);
+      border-radius: 7px;
+      font-size: 1.1em;
+      font-family: inherit;
+      padding: 0.6em 1em;
+      flex: 1 1 auto;
+      outline: none;
+      box-shadow: 0 0 7px #00ffe7 inset;
+    }
+    .search-bar button {
+      background: var(--holo-accent);
+      border: none;
+      color: #0b0f1a;
+      border-radius: 7px;
+      font-size: 1.1em;
+      padding: 0.6em 1.4em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 13px #39ff14;
+      font-family: inherit;
+    }
+    .search-bar button:hover {
+      background: var(--hacker-green);
+      color: #0b0f1a;
+    }
     .song-list {
-      max-height: 250px;
+      max-height: 270px;
       overflow-y: auto;
+      margin-bottom: 0.7em;
     }
     .song-item {
-      background: rgba(0,255,231,0.06);
+      background: rgba(0,255,231,0.05);
       border: 1.5px solid #39ff148f;
       border-radius: 7px;
       padding: 0.7em 1em;
@@ -131,7 +165,7 @@
       cursor: pointer;
     }
     .song-item.active, .song-item:hover {
-      background: rgba(57,255,20,0.15);
+      background: rgba(57,255,20,0.13);
       box-shadow: 0 0 11px #39ff14;
     }
     .song-title {
@@ -155,6 +189,7 @@
       padding: 0.3em 0.6em;
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
+      text-decoration: none;
     }
     .action-btn:hover {
       background: var(--hacker-green);
@@ -231,10 +266,12 @@
   </header>
   <main>
     <section class="music-panel">
-      <h2 class="cyber-glow">Download & Play Music</h2>
-      <div class="song-list" id="songList">
-        <!-- Songs will be loaded here -->
-      </div>
+      <h2 class="cyber-glow">Search, Download & Play Music</h2>
+      <form class="search-bar" id="musicSearchForm" autocomplete="off">
+        <input type="text" id="musicSearch" placeholder="Search for any song or artist..." required>
+        <button type="submit">Search</button>
+      </form>
+      <div class="song-list" id="songList"></div>
       <div class="audio-player" id="audioPlayer" style="display:none;">
         <audio id="audio" controls></audio>
         <div id="nowPlaying" style="margin-top:0.4em; font-size:1em;color:#00ffe7;"></div>
@@ -324,12 +361,17 @@
     }
     draw();
 
-    // Music fetch + list
-    async function fetchMusic() {
-      // Try to fetch top trending songs from Jamendo open API (no auth needed)
-      // If fails, fallback to hardcoded demo
+    // Music search and fetch
+    let currentSong = null, songs = [];
+    const songList = document.getElementById('songList');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const audio = document.getElementById('audio');
+    const nowPlaying = document.getElementById('nowPlaying');
+
+    async function searchMusic(query) {
+      // Try to fetch from Jamendo API (public, free, music for all)
       try {
-        let resp = await fetch('https://api.jamendo.com/v3.0/tracks/?client_id=6c6f0e8e&format=json&limit=10&order=popularity_total');
+        let resp = await fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=6c6f0e8e&format=json&limit=12&namesearch=${encodeURIComponent(query)}`);
         let data = await resp.json();
         if (data.results && data.results.length) {
           return data.results.map(song => ({
@@ -339,7 +381,7 @@
           }));
         }
       } catch (e) {}
-      // Fallback
+      // Fallback: show demo tracks
       return [
         {
           title: "Cyber Dreams - Av3",
@@ -355,8 +397,11 @@
     }
 
     function renderSongs(songArr) {
-      const songList = document.getElementById('songList');
       songList.innerHTML = '';
+      if (!songArr.length) {
+        songList.innerHTML = `<div style="text-align:center;color:#00ffe7;">No songs found.</div>`;
+        return;
+      }
       songArr.forEach((song, idx) => {
         const el = document.createElement('div');
         el.className = "song-item";
@@ -369,12 +414,7 @@
         `;
         songList.appendChild(el);
       });
-    }
-
-    let currentSong = null, songs = [];
-    async function initSongs() {
-      songs = await fetchMusic();
-      renderSongs(songs);
+      // Add event listeners for play
       document.querySelectorAll('[data-play]').forEach(btn => {
         btn.onclick = e => {
           let idx = parseInt(btn.dataset.play);
@@ -384,9 +424,6 @@
     }
 
     function playSong(idx) {
-      const audioPlayer = document.getElementById('audioPlayer');
-      const audio = document.getElementById('audio');
-      const nowPlaying = document.getElementById('nowPlaying');
       audio.src = songs[idx].url;
       audio.style.display = '';
       audioPlayer.style.display = '';
@@ -399,8 +436,25 @@
       currentSong = idx;
     }
 
+    // On search
+    document.getElementById('musicSearchForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('musicSearch').value.trim();
+      if (!query) return;
+      songList.innerHTML = `<div style="color:#00ffe7;text-align:center;">Searching...</div>`;
+      songs = await searchMusic(query);
+      renderSongs(songs);
+      audioPlayer.style.display = 'none';
+    };
+
+    // Provide some tracks on page load
     window.onload = () => {
-      initSongs();
+      // Show some trending tracks by default
+      document.getElementById('musicSearch').value = '';
+      (async () => {
+        songs = await searchMusic("trending");
+        renderSongs(songs);
+      })();
     };
 
     // Star rating
@@ -410,7 +464,6 @@
         let val = +star.dataset.val;
         stars.forEach(s => s.classList.toggle('selected', +s.dataset.val <= val));
         document.getElementById('rateThanks').style.display = 'block';
-        // (Optional) Save rating to localStorage to prevent multiple submissions
         localStorage.setItem('cybermusichub_rating', val);
       };
     });
