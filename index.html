@@ -12,494 +12,408 @@
 </html><!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
   <title>PK MUSIC DOWNLOADER</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Download and play music from YouTube, Spotify, Vidmate and more with a pkdriller, coded, website.">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --hacker-green: #39ff14;
-      --cyber-outline: #00ffea;
-      --cyber-bg: #0d0f1c;
-      --glass: rgba(25,40,40,0.76);
-      --shadow: 0 0 15px #00ffea60, 0 0 2px #39ff14cc;
-    }
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       padding: 0;
-      font-family: 'Orbitron', monospace;
-      background: linear-gradient(120deg, #0d0f1c 80%, #1b1e35 100%);
+      background: radial-gradient(ellipse at top left,#07110e 60%,#052a1b 100%);
+      color: #50ff99;
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
       overflow-x: hidden;
     }
-    body {
-      min-height: 100vh;
-      color: var(--hacker-green);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      position: relative;
+    .holo-anim {
+      pointer-events: none;
+      z-index: 0;
+      position: fixed;
+      width: 100vw; height: 100vh; top: 0; left: 0;
+      background: repeating-linear-gradient(120deg, #50ff99 0 2px, transparent 2px 40px);
+      opacity: 0.03;
+      mix-blend-mode: lighten;
     }
-    .cyber-glass {
-      background: var(--glass);
-      border: 2px solid var(--cyber-outline);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-      padding: 32px 24px 24px 24px;
-      margin: 32px 0 16px 0;
-      width: 98vw;
-      max-width: 530px;
-      position: relative;
-      z-index: 1;
-    }
-    h1 {
-      font-size: 2.2rem;
+    header {
       text-align: center;
-      letter-spacing: 2px;
-      color: var(--hacker-green);
-      filter: drop-shadow(0 0 3px var(--cyber-outline));
-      margin-bottom: 4px;
+      margin-top: 40px;
+      margin-bottom: 18px;
+    }
+    .main-title {
+      font-size: 2.6rem;
+      letter-spacing: 9px;
+      text-shadow: 0 0 8px #00ffae,0 0 30px #00ffae80;
+      background: linear-gradient(90deg,#39ff14,#00fff0 60%,#39ff14);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      border-bottom: 2px solid #50ff99;
+      padding-bottom: 8px;
       user-select: none;
     }
-    .live-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 0;
-      pointer-events: none;
+    .search-section {
+      display: flex; justify-content: center; margin: 40px 0 18px 0; gap: 12px; z-index: 2; position: relative;
     }
-    .search-bar {
-      display: flex;
-      width: 100%;
-      margin: 8px 0 20px 0;
-      gap: 10px;
-    }
-    .search-bar input {
-      flex: 1;
-      background: #07110e;
-      color: var(--hacker-green);
-      border: 2px solid var(--cyber-outline);
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 1.1em;
+    .search-section input {
+      width: 340px; max-width: 70vw;
+      background: #03190b;
+      border: 2px solid #50ff99;
+      color: #50ff99;
+      font-size: 1.1rem;
+      padding: 11px 16px;
+      border-radius: 8px;
       outline: none;
-      box-shadow: 0 0 8px #00ffea45;
-      transition: border-color 0.2s;
+      transition: border 0.2s;
+      box-shadow: 0 0 6px #00ffae50;
     }
-    .search-bar button {
-      background: linear-gradient(90deg, #00ffea 40%, #2bf600 100%);
-      color: #0d0f1c;
+    .search-section button {
+      background: linear-gradient(90deg,#50ff99,#00ffae 70%);
+      color: #0c2e1a;
       border: none;
-      border-radius: 10px;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      font-size: 1.1em;
-      padding: 10px 20px;
-      box-shadow: 0 0 6px #00ffea66;
+      font-size: 1.08rem;
+      padding: 11px 22px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+      font-weight: bold;
+      box-shadow: 0 0 8px #39ff1490;
+      letter-spacing: 1px;
+      transition: background 0.2s;
     }
-    .search-bar button:hover {
-      background: linear-gradient(90deg, #39ff14 10%, #00ffea 90%);
-      color: #000;
+    .search-section button:hover {
+      background: linear-gradient(90deg, #00ffae, #50ff99 70%);
+    }
+    .results {
+      max-width: 740px;
+      margin: 0 auto;
+      background: rgba(11,34,21,0.83);
+      border-radius: 15px;
+      padding: 22px 14px 18px 14px;
+      box-shadow: 0 0 28px #50ff9922;
+      min-height: 110px;
+      z-index: 1;
+      position: relative;
     }
     .music-list {
       list-style: none;
       padding: 0;
       margin: 0;
-      max-height: 340px;
-      overflow-y: auto;
-      width: 100%;
     }
-    .music-item {
+    .music-list li {
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(0,255,20,0.06);
-      border: 1.5px solid #00ffea88;
-      border-radius: 12px;
-      margin-bottom: 14px;
-      padding: 10px 8px;
-      box-shadow: 0 0 7px #00ffea33;
-      transition: box-shadow 0.2s, border 0.2s;
+      gap: 19px;
+      padding: 12px 0 10px 0;
+      border-bottom: 1px solid #1a5b3d66;
     }
-    .music-item:hover {
-      box-shadow: 0 0 16px #39ff1455, 0 0 2px #00ffea99;
-      border-color: #39ff14;
-    }
-    .music-thumb {
-      width: 62px;
-      height: 62px;
-      border-radius: 9px;
-      box-shadow: 0 0 8px #00ffea88;
+    .music-list li:last-child { border-bottom: none; }
+    .thumb {
+      width: 67px; height: 67px;
+      border-radius: 7px;
       object-fit: cover;
-      border: 1.5px solid #00ffea;
-      background: #0d0f1c;
+      border: 2px solid #50ff99;
+      background: #0b2215;
+      box-shadow: 0 0 10px #50ff9977;
+      cursor: pointer;
+      transition: transform 0.15s;
     }
-    .music-details {
-      flex: 1;
-      min-width: 0;
-    }
+    .thumb:active { transform: scale(0.97); }
+    .info { flex: 1; min-width: 0; }
     .music-title {
-      font-size: 1.04em;
-      color: var(--hacker-green);
+      font-size: 1.13rem;
+      font-weight: bold;
+      color: #50ff99;
+      margin-bottom: 5px;
+      text-shadow: 0 0 4px #50ff99bb;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 3px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      filter: drop-shadow(0 0 2px #00ffea99);
+      user-select: text;
     }
-    .music-artist {
-      font-size: 0.91em;
-      color: #00ffea;
-      opacity: 0.8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .music-meta {
+      font-size: 0.96rem;
+      color: #00ffae;
+      opacity: 0.76;
+      margin-bottom: 2px;
     }
-    .music-source {
-      font-size: 0.8em;
-      color: #39ff14b0;
-      background: #07110e;
-      border-radius: 5px;
-      margin-top: 2px;
-      padding: 2px 7px;
-      display: inline-block;
-      letter-spacing: 1px;
-    }
-    .music-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .music-actions button {
-      background: #00ffea;
-      color: #0d0f1c;
-      border: none;
+    .source-badge {
+      font-size: 0.89rem;
+      color: #03190b;
+      background: #00ffae;
+      padding: 2px 8px;
       border-radius: 6px;
-      font-size: 0.91em;
-      font-family: 'Orbitron', monospace;
-      padding: 3px 12px;
-      cursor: pointer;
-      box-shadow: 0 0 7px #00ffea44;
-      transition: background 0.18s, color 0.18s;
-    }
-    .music-actions button:hover {
-      background: #39ff14;
-      color: #000;
-    }
-    .audio-player {
-      width: 100%;
-      background: #07110e;
-      border-radius: 10px;
-      border: 2px solid #00ffea;
-      margin: 12px 0 0 0;
-      padding: 6px 0 0 0;
-      box-shadow: 0 0 8px #00ffea30;
-    }
-    .cyber-footer {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 1.06em;
-      color: #00ffea;
-      padding-bottom: 18px;
-      opacity: 0.78;
-    }
-    .footer-links a {
-      color: #39ff14;
-      text-decoration: none;
-      margin: 0 11px;
       font-weight: 700;
-      transition: color 0.18s;
-      filter: drop-shadow(0 0 2px #00ffea88);
+      margin-left: 7px;
+      box-shadow: 0 0 5px #00ffae90;
+      vertical-align: middle;
+      user-select: none;
     }
-    .footer-links a:hover {
-      color: #00ffea;
-      text-shadow: 0 0 10px #39ff14bb;
-    }
-    .rating {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      margin-top: 12px;
-      font-size: 1.15em;
-    }
-    .star {
-      font-size: 1.4em;
+    .play-btn {
+      background: none;
+      border: 2px solid #50ff99;
+      color: #50ff99;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      color: #00ffea66;
-      transition: color 0.16s, text-shadow 0.16s;
-      text-shadow: 0 0 7px #39ff1430;
+      transition: background 0.2s, color 0.2s;
+      margin-left: 9px;
     }
-    .star.selected, .star:hover, .star.selected ~ .star {
-      color: #39ff14;
-      text-shadow: 0 0 12px #00ffea;
+    .play-btn.playing,.play-btn:active { background: #00ffaeaa; color: #03190b; }
+    .audio-bar {
+      width: 100%;
+      background: #03190b;
+      border-top: 2px solid #50ff99;
+      border-radius: 0 0 16px 16px;
+      padding: 13px 0 10px 0;
+      display: flex; align-items: center; justify-content: center; gap: 18px;
+      position: fixed; bottom: 0; left: 0; z-index: 99;
+      box-shadow: 0 0 32px #50ff9922;
+      height: 70px;
+      transition: transform 0.32s;
     }
+    .audio-bar.hidden { transform: translateY(100%); }
+    .audio-title {
+      flex: 1; color: #00ffae; font-size: 1rem; text-align: left;
+      margin-right: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-weight: 500; letter-spacing: 1px; user-select: text;
+    }
+    .audio-thumb {
+      width: 52px; height: 52px;
+      border-radius: 7px;
+      object-fit: cover;
+      border: 2px solid #50ff99;
+      background: #0b2215;
+      margin-left: 8px;
+    }
+    .github-follow,
+    .rate-section {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #03190b;
+      border: 2px solid #50ff99;
+      border-radius: 8px;
+      padding: 8px 18px;
+      margin: 22px 12px 0 0;
+      color: #50ff99;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s;
+      box-shadow: 0 0 8px #39ff1490;
+      font-size: 1.08rem;
+    }
+    .github-follow:hover,.rate-section:hover { background: #00ffae33; color: #39ff14; }
+    .footer {
+      text-align: center;
+      margin-top: 40px; margin-bottom: 92px;
+      color: #00ffaecc; font-size: 1.1rem; letter-spacing: 2px;
+      text-shadow: 0 0 5px #50ff9950;
+      user-select: none;
+    }
+    .hacker-glow { box-shadow: 0 0 14px #00ffae,0 0 42px #39ff14aa; }
     @media (max-width: 600px) {
-      .cyber-glass {
-        max-width: 99vw;
-        padding: 17px 4vw 15px 4vw;
-      }
-      .music-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-      .music-thumb {
-        width: 98vw;
-        max-width: 320px;
-        height: 34vw;
-        min-height: 50px;
-      }
+      .search-section input { width: 120px; font-size: 1rem;}
+      .audio-bar { height: 105px; flex-direction: column;}
+      .audio-bar .audio-title { margin-right: 0;}
+      .audio-bar .audio-thumb { margin-left: 0;}
+      .results { min-width: 0; padding: 12px 0 10px 0;}
     }
   </style>
 </head>
 <body>
-  <canvas class="live-bg"></canvas>
-  <div class="cyber-glass">
-    <h1>PK MUSIC DOWNLOADER</h1>
-    <div style="text-align:center;margin-bottom:7px;color:#00ffea;font-size:1.02em;letter-spacing:0.5px;">
-      Download &amp; Play music from <b>YouTube</b>, <b>Spotify*</b>, <b>Vidmate*</b> and more!
-    </div>
-    <div class="search-bar">
-      <input id="searchInput" type="text" placeholder="Search music (YouTube, Spotify, Vidmate)..." autofocus>
-      <button onclick="searchMusic()">Search</button>
-    </div>
-    <ul class="music-list" id="musicList"></ul>
-    <div id="playerArea"></div>
+  <div class="holo-anim"></div>
+  <header>
+    <h1 class="main-title hacker-glow">PK MUSIC DOWNLOADER</h1>
+  </header>
+  <div class="search-section">
+    <input id="searchInput" type="text" placeholder="Search music, artist, or paste a link..." autofocus autocomplete="off"/>
+    <button id="searchBtn">Search</button>
   </div>
-  <div class="cyber-footer">
-    <div class="footer-links">
-      <a href="https://github.com/Pkdriller" target="_blank">Follow me on GitHub</a> &bull;
-      <a href="#" id="rateLink">Rate this site</a>
+  <div class="results" id="results">
+    <div style="text-align:center;color:#00ffae99;font-size:1.17rem;">
+      <span>🔍 Search for any music to play or download.<br>Sources: YouTube, Spotify, Vidmate, and more.</span>
     </div>
-    <div id="ratingBox" style="display:none">
-      <div class="rating">
-        <span class="star" onclick="rate(1)">★</span>
-        <span class="star" onclick="rate(2)">★</span>
-        <span class="star" onclick="rate(3)">★</span>
-        <span class="star" onclick="rate(4)">★</span>
-        <span class="star" onclick="rate(5)">★</span>
-      </div>
-      <div id="rateMsg"></div>
-    </div>
-    <div style="margin-top:12px;font-size:0.96em;opacity:0.66;">
-      <span style="color:#39ff14;">Cybernetic</span> &amp; <span style="color:#00ffea;">holographic</span> design. <span style="color:#ff5;">*</span>Spotify &amp; Vidmate: <i>opens search page for now</i>
-    </div>
+  </div>
+  <div class="audio-bar hidden" id="audioBar">
+    <img src="" alt="Cover" class="audio-thumb" id="audioThumb">
+    <div class="audio-title" id="audioTitle"></div>
+    <audio id="audioPlayer" controls preload="auto" style="background:#03190b;border-radius:8px;max-width:180px;"></audio>
+    <button class="play-btn" id="audioPlayBtn" title="Pause/Resume">&#9654;</button>
+  </div>
+  <div style="text-align:center;margin-top:32px;">
+    <a href="https://github.com/Pkdriller" class="github-follow" target="_blank">
+      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="24" height="24" style="border-radius:6px;filter:brightness(1.2);border:1px solid #00ffae;margin-right:6px;">
+      Follow me on GitHub
+    </a>
+    <span class="rate-section" id="rateSection">
+      <span style="margin-right:5px;">Rate this website:</span>
+      <span id="stars" style="cursor:pointer;">
+        <span data-star="1">&#9734;</span>
+        <span data-star="2">&#9734;</span>
+        <span data-star="3">&#9734;</span>
+        <span data-star="4">&#9734;</span>
+        <span data-star="5">&#9734;</span>
+      </span>
+    </span>
+  </div>
+  <div class="footer">
+    Cybernetic & Holographic UI • Hacker Green Style<br>
+    Powered by <span style="color:#50ff99;font-weight:700;">PKdriller</span>
   </div>
   <script>
-    // Live cybernetic background
-    const canvas = document.querySelector('.live-bg');
-    const ctx = canvas.getContext('2d');
-    let w = window.innerWidth, h = window.innerHeight;
-    function resize() { w = window.innerWidth; h = window.innerHeight; canvas.width = w; canvas.height = h; }
-    window.addEventListener('resize', resize); resize();
+    // Holo animation
+    setInterval(()=>{document.querySelector('.holo-anim').style.backgroundPosition=`${Math.random()*400}px ${Math.random()*400}px`;},2000);
 
-    let points = [];
-    function initPoints() {
-      points = [];
-      let gridX = Math.ceil(w / 70), gridY = Math.ceil(h / 70);
-      for (let y = 0; y < gridY; y++) {
-        for (let x = 0; x < gridX; x++) {
-          let px = x * 70 + 35 + (Math.random()-0.5)*15;
-          let py = y * 70 + 35 + (Math.random()-0.5)*15;
-          let dx = (Math.random()-0.5)*0.33, dy = (Math.random()-0.5)*0.33;
-          points.push({x:px,y:py,dx,dy});
-        }
-      }
-    }
-    function drawBg() {
-      ctx.clearRect(0, 0, w, h);
-      ctx.globalAlpha = 0.54;
-      for (let p of points) {
-        p.x += p.dx; p.y += p.dy;
-        if (p.x < 15 || p.x > w-15) p.dx *= -1;
-        if (p.y < 15 || p.y > h-15) p.dy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.5, 0, 2*Math.PI);
-        ctx.fillStyle = "#39ff14";
-        ctx.shadowColor = "#00ffea";
-        ctx.shadowBlur = 12;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 0.22;
-      ctx.shadowBlur = 0;
-      for (let i=0;i<points.length;i++) {
-        for (let j=i+1;j<points.length;j++) {
-          let a=points[i],b=points[j],d=Math.hypot(a.x-b.x, a.y-b.y);
-          if (d<105) {
-            ctx.strokeStyle = "#00ffea";
-            ctx.lineWidth = 1.1 - (d/115);
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(drawBg);
-    }
-    initPoints(); drawBg();
-    window.addEventListener('resize', ()=>{initPoints();});
-
-    // Multi-source Music Search
-    async function searchMusic() {
-      const q = document.getElementById('searchInput').value.trim();
-      if (!q) return;
-      document.getElementById('musicList').innerHTML = '<li style="color:#00ffea;text-align:center;">Searching across platforms...</li>';
-      // Start all searches in parallel
-      const searchers = [
-        fetchYouTube(q),
-        fakeSpotify(q),
-        fakeVidmate(q)
-      ];
-      let results = [];
-      try {
-        results = await Promise.all(searchers);
-      } catch (e) {}
-      // Flatten, filter and show results
-      let all = results.flat().filter(Boolean).slice(0, 15);
-      if (all.length === 0) {
-        document.getElementById('musicList').innerHTML = '<li style="color:#00ffea;text-align:center;">No results found.</li>';
-        return;
-      }
-      document.getElementById('musicList').innerHTML = "";
-      all.forEach(item => {
-        let li = document.createElement('li');
-        li.className = 'music-item';
-        let thumb = document.createElement('img');
-        thumb.className = 'music-thumb';
-        thumb.src = item.thumb || '';
-        thumb.alt = "Thumbnail";
-        let details = document.createElement('div');
-        details.className = 'music-details';
-        details.innerHTML = `<div class="music-title">${item.title}</div>
-          <div class="music-artist">${item.artist || "Unknown"}</div>
-          <span class="music-source">${item.source}</span>`;
-        let actions = document.createElement('div');
-        actions.className = 'music-actions';
-        let playBtn = document.createElement('button');
-        playBtn.textContent = "▶ Play";
-        playBtn.onclick = () => playMusic(item);
-        let dlBtn = document.createElement('button');
-        dlBtn.textContent = "⭳ Download";
-        dlBtn.onclick = () => downloadMusic(item);
-        actions.appendChild(playBtn);
-        actions.appendChild(dlBtn);
-        li.appendChild(thumb);
-        li.appendChild(details);
-        li.appendChild(actions);
-        document.getElementById('musicList').appendChild(li);
+    // Star rating logic
+    const stars = document.querySelectorAll('#stars span');
+    let rated = 0;
+    stars.forEach(star=>{
+      star.addEventListener('mouseover',()=>{
+        const val=+star.getAttribute('data-star');
+        stars.forEach((s,i)=>{s.innerHTML=(i<val)?'★':'☆';});
       });
-    }
-
-    // YouTube Search - uses Invidious API (no API key/public)
-    async function fetchYouTube(q) {
-      try {
-        const api = "https://vid.puffyan.us/api/v1/search?q=" + encodeURIComponent(q) + "&type=video";
-        const res = await fetch(api);
-        const data = await res.json();
-        if (!Array.isArray(data)) return [];
-        return data.slice(0, 7).map(item => ({
-          source: "YouTube",
-          id: item.videoId,
-          title: item.title,
-          artist: item.author?.name || "",
-          thumb: item.videoThumbnails?.[1]?.url || item.videoThumbnails?.[0]?.url || "",
-          url: "https://www.youtube.com/watch?v=" + item.videoId
-        }));
-      } catch (e) {
-        return [];
-      }
-    }
-
-    // Fake Spotify - just provides a search link with mock results
-    function fakeSpotify(q) {
-      return [
-        {
-          source: "Spotify",
-          id: q.replace(/\s/g,'-'),
-          title: "Search on Spotify: " + q,
-          artist: "",
-          thumb: "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Green.png",
-          url: "https://open.spotify.com/search/" + encodeURIComponent(q)
-        }
-      ];
-    }
-
-    // Fake Vidmate - just provides a search link with mock results
-    function fakeVidmate(q) {
-      return [
-        {
-          source: "Vidmate",
-          id: q.replace(/\s/g,'_'),
-          title: "Search on Vidmate: " + q,
-          artist: "",
-          thumb: "https://www.vidmateapp.com/assets/img/logo.png",
-          url: "https://www.vidmateapp.com/results?search_query=" + encodeURIComponent(q)
-        }
-      ];
-    }
-
-    // Play music: YouTube = embed, others = open tab
-    function playMusic(item) {
-      const player = document.getElementById('playerArea');
-      if (item.source === "YouTube") {
-        player.innerHTML = `
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px;">
-            <img src="${item.thumb}" alt="thumb" style="width:60px;height:60px;border-radius:10px;box-shadow:0 0 7px #00ffea80;">
-            <div>
-              <div style="color:#39ff14;font-size:1.07em;font-weight:700;">${item.title}</div>
-              <div style="color:#00ffea;font-size:0.96em;">${item.artist||''}</div>
-            </div>
-          </div>
-          <div class="audio-player">
-            <iframe width="100%" height="70" src="https://www.youtube.com/embed/${item.id}?autoplay=1" 
-              frameborder="0" allow="autoplay; encrypted-media" allowfullscreen
-              style="border-radius:9px;box-shadow:0 0 5px #00ffea33;"></iframe>
-          </div>
-          <div style="margin-top:7px;">
-            <a href="${item.url}" target="_blank" style="color:#00ffea;text-decoration:underline;font-size:0.96em;">Open on YouTube</a>
-          </div>
-        `;
-      } else {
-        window.open(item.url, "_blank");
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Download: YouTube (ytmp3), Spotify/Vidmate = open search page
-    function downloadMusic(item) {
-      if (item.source === "YouTube") {
-        // Demo: uses public ytmp3.plus (for production, use your own backend)
-        const url = `https://ytmp3.plus/en3/youtube-to-mp3/${item.id}`;
-        window.open(url, '_blank');
-      } else {
-        window.open(item.url, '_blank');
-      }
-    }
-    // Enter key search
-    document.getElementById('searchInput').addEventListener('keydown', function(e){
-      if (e.key==='Enter') searchMusic();
+      star.addEventListener('mouseout',()=>{
+        stars.forEach((s,i)=>{s.innerHTML=(i<rated)?'★':'☆';});
+      });
+      star.addEventListener('click',()=>{
+        rated=+star.getAttribute('data-star');
+        stars.forEach((s,i)=>{s.innerHTML=(i<rated)?'★':'☆';});
+        document.getElementById('rateSection').innerHTML=`<span style="color:#00ffae;">Thank you for rating: ${"★".repeat(rated)}${"☆".repeat(5-rated)}</span>`;
+      });
     });
 
-    // Rating system
-    document.getElementById('rateLink').onclick = function(e){
-      e.preventDefault();
-      document.getElementById('ratingBox').style.display = 'block';
-      document.getElementById('rateMsg').textContent = '';
-    };
-    function rate(n) {
-      let stars = document.querySelectorAll('.star');
-      stars.forEach((s,i)=>s.classList[i<n?'add':'remove']('selected'));
-      document.getElementById('rateMsg').textContent = "Thanks for rating: " + n + " star"+(n>1?"s":"")+"! ⭐";
+    // Music search logic (demo/mock, replace fetchMusic with real API)
+    const searchInput=document.getElementById('searchInput');
+    const searchBtn=document.getElementById('searchBtn');
+    const resultsDiv=document.getElementById('results');
+    let lastQuery="";
+    let playingAudio=null;
+
+    function escapeHTML(text) {
+      return (text||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);
     }
+
+    // For demo, mock results. Integrate real API as needed.
+    async function fetchMusic(query) {
+      // Place your actual fetching logic here. Example uses a static array.
+      resultsDiv.innerHTML=`<div style="color:#00ffaecc;text-align:center;margin:22px 0;font-size:1.23rem;"><span class="hacker-glow">Searching for "${escapeHTML(query)}"...</span></div>`;
+      // Simulate delay
+      await new Promise(r=>setTimeout(r,600));
+      // Example results (replace with actual API results)
+      let demoResults=[
+        {
+          title:"Astronaut In The Ocean",
+          artist:"Masked Wolf",
+          duration:"2:12",
+          source:"YouTube",
+          thumb:"https://i.ytimg.com/vi/MEg-oqI9qmw/hqdefault.jpg",
+          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        },
+        {
+          title:"Industry Baby",
+          artist:"Lil Nas X & Jack Harlow",
+          duration:"3:32",
+          source:"Spotify",
+          thumb:"https://i.scdn.co/image/ab67616d0000b273c5fae7f7c5d2d1ea97e5e7c7",
+          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+        },
+        {
+          title:"On My Way",
+          artist:"Alan Walker",
+          duration:"3:13",
+          source:"Vidmate",
+          thumb:"https://i.ytimg.com/vi/dhYOPzcsbGM/hqdefault.jpg",
+          audio:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+        }
+      ];
+      renderResults(demoResults);
+    }
+
+    function renderResults(results) {
+      if(!Array.isArray(results)||!results.length) {
+        resultsDiv.innerHTML=`<div style="color:#ff4e5c;text-align:center;padding:32px 0;font-size:1.2rem;"><b>No music found!</b></div>`;
+        return;
+      }
+      const html=['<ul class="music-list">'];
+      results.forEach(item=>{
+        let srcBadge="";
+        const src=(item.source||"").toUpperCase();
+        if(src.includes("YOUTUBE")) srcBadge='<span class="source-badge">YouTube</span>';
+        else if(src.includes("SPOTIFY")) srcBadge='<span class="source-badge">Spotify</span>';
+        else if(src.includes("VIDMATE")) srcBadge='<span class="source-badge">Vidmate</span>';
+        else if(src) srcBadge=`<span class="source-badge">${escapeHTML(src)}</span>`;
+        let thumb=item.thumb||"https://cdn-icons-png.flaticon.com/512/727/727245.png";
+        let title=escapeHTML(item.title||"Untitled");
+        let artist=escapeHTML(item.artist||"");
+        let duration=item.duration||"";
+        let audioUrl=item.audio||item.url||"";
+        html.push(`
+        <li>
+          <img src="${thumb}" class="thumb" alt="Cover" title="Preview" onclick="playThumbPreview('${thumb}')">
+          <div class="info">
+            <div class="music-title">${title} ${srcBadge}</div>
+            <div class="music-meta">${artist} ${duration?`• ${duration}`:""}</div>
+          </div>
+          <button class="play-btn" onclick="playMusic('${escapeHTML(title)}','${audioUrl}','${thumb}', this)" title="Play">&#9654;</button>
+          <a href="${audioUrl}" download target="_blank" style="color:#00ffae;margin-left:7px;text-decoration:underline;font-size:1rem;" title="Download">⬇</a>
+        </li>`);
+      });
+      html.push("</ul>");
+      resultsDiv.innerHTML=html.join('');
+    }
+
+    // Expose playMusic and playThumbPreview globally
+    window.playMusic=(title,audioUrl,thumb,btn)=>{
+      const bar=document.getElementById('audioBar');
+      const player=document.getElementById('audioPlayer');
+      const titleDiv=document.getElementById('audioTitle');
+      const thumbImg=document.getElementById('audioThumb');
+      if(playingAudio && playingAudio!==player) playingAudio.pause();
+      if(player.src===audioUrl) {
+        if(player.paused) { player.play(); btn.classList.add('playing'); }
+        else { player.pause(); btn.classList.remove('playing'); }
+        return;
+      }
+      playingAudio=player;
+      player.src=audioUrl;
+      player.play();
+      titleDiv.textContent=title;
+      thumbImg.src=thumb;
+      bar.classList.remove('hidden');
+      document.querySelectorAll('.play-btn').forEach(b=>b.classList.remove('playing'));
+      btn.classList.add('playing');
+      player.onpause=()=>{btn.classList.remove('playing');};
+      player.onplay=()=>{btn.classList.add('playing');};
+    };
+    window.playThumbPreview=(thumb)=>{
+      // Play a "beep" and flash the thumb for confirmation
+      const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+      const o=audioCtx.createOscillator();
+      o.type='triangle'; o.frequency.value=440; o.connect(audioCtx.destination); o.start();
+      setTimeout(()=>o.stop(), 180);
+      // Animate the thumb image
+      const imgs=[...document.querySelectorAll('.thumb')].filter(img=>img.src===thumb);
+      imgs.forEach(img=>{
+        img.classList.add('hacker-glow');
+        setTimeout(()=>img.classList.remove('hacker-glow'), 400);
+      });
+    };
+    // Hide audio bar on audio end
+    document.getElementById('audioPlayer').addEventListener('ended',()=>{document.getElementById('audioBar').classList.add('hidden');});
+    // Play/pause from bar
+    document.getElementById('audioPlayBtn').onclick=function() {
+      const player=document.getElementById('audioPlayer');
+      if(player.paused) player.play(); else player.pause();
+    };
+    // Search events
+    searchBtn.onclick=()=>{
+      const val=searchInput.value.trim();
+      if(!val||val===lastQuery) return;
+      lastQuery=val;
+      fetchMusic(val);
+    };
+    searchInput.addEventListener('keydown',e=>{if(e.key==="Enter")searchBtn.click();});
   </script>
 </body>
 </html>
